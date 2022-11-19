@@ -11,55 +11,55 @@ namespace ForuMe.Web.Services
             _cliendFactory = clientFactory;
         }
 
-        public async Task<T> CreateBlogAsync<T>(BlogDto blogDto)
+        public async Task<T> CreateBlogAsync<T>(BlogDto blogDto, string token)
         {
             return await this.SendAsync<T>(new ApiRequest()
             { 
                 ApiType = SD.ApiType.POST,
                 Data = blogDto,
                 Url = SD.BlogAPIBase + "api/blogs/",
-                AccessToken = ""
+                AccessToken = token
             });
         }
 
-        public async Task<T> DeleteBlogAsync<T>(int id)
+        public async Task<T> DeleteBlogAsync<T>(int id, string token)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.DELETE,
                 Url = SD.BlogAPIBase + "api/blogs/" + id,
-                AccessToken = ""
+                AccessToken = token
             });
         }
 
-        public async Task<T> GetAllBlogByIdAsync<T>(int id)
+        public async Task<T> GetAllBlogByIdAsync<T>(int id, string token)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.GET,
                 Url = SD.BlogAPIBase + "api/blogs/" + id,
-                AccessToken = ""
+                AccessToken = token
             });
         }
 
-        public async Task<T> GetAllBlogsAsync<T>()
+        public async Task<T> GetAllBlogsAsync<T>(string token)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.GET,
                 Url = SD.BlogAPIBase + "api/blogs/",
-                AccessToken = ""
+                AccessToken = token
             });
         }
 
-        public async Task<T> UpdateBlogAsync<T>(BlogDto blogDto)
+        public async Task<T> UpdateBlogAsync<T>(BlogDto blogDto, string token)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.PUT,
                 Data = blogDto,
                 Url = SD.BlogAPIBase + "api/blogs/",
-                AccessToken = ""
+                AccessToken = token
             });
         }
     }

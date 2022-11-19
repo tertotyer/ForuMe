@@ -53,7 +53,7 @@ namespace ForuMe.Services.BlogAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ResponseDto> Post([FromBody] BlogDto blogDto)
         {   
             try
@@ -70,7 +70,7 @@ namespace ForuMe.Services.BlogAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ResponseDto> Put([FromBody] BlogDto blogDto)
         {
             try

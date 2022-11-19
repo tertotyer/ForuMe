@@ -1,7 +1,9 @@
+using Duende.IdentityServer.Services;
 using ForuMe.Services.Identity;
 using ForuMe.Services.Identity.Data;
 using ForuMe.Services.Identity.DbContexts;
 using ForuMe.Services.Identity.Models;
+using ForuMe.Services.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +29,8 @@ var identityBuilder = builder.Services.AddIdentityServer(options =>
 .AddInMemoryApiScopes(SD.ApiScopes)
 .AddInMemoryClients(SD.Clients)
 .AddAspNetIdentity<ApplicationUser>();
+
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 identityBuilder.AddDeveloperSigningCredential();
 

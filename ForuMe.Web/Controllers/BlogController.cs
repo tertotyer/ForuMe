@@ -1,7 +1,10 @@
 ﻿using ForuMe.Web.Models;
 using ForuMe.Web.Services.IServices;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Data;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 
@@ -19,7 +22,8 @@ namespace ForuMe.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var products = new List<BlogDto>();
-            var response = await _blogService.GetAllBlogsAsync<ResponseDto>();
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var response = await _blogService.GetAllBlogsAsync<ResponseDto>(accessToken);
 
             if (response != null && response.IsSuccess)
             {
@@ -39,7 +43,8 @@ namespace ForuMe.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _blogService.CreateBlogAsync<ResponseDto>(model);
+                var accessToken = await HttpContext.GetTokenAsync("access_token");
+                var response = await _blogService.CreateBlogAsync<ResponseDto>(model, accessToken);
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));
@@ -51,7 +56,8 @@ namespace ForuMe.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var response = await _blogService.GetAllBlogByIdAsync<ResponseDto>(id);
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var response = await _blogService.GetAllBlogByIdAsync<ResponseDto>(id, accessToken);
             if (response != null && response.IsSuccess)
             {
                 var model = JsonConvert.DeserializeObject<BlogDto>(Convert.ToString(response.Result));
@@ -66,7 +72,8 @@ namespace ForuMe.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _blogService.UpdateBlogAsync<ResponseDto>(model);
+                var accessToken = await HttpContext.GetTokenAsync("access_token");
+                var response = await _blogService.UpdateBlogAsync<ResponseDto>(model, accessToken);
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));
@@ -78,7 +85,8 @@ namespace ForuMe.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _blogService.GetAllBlogByIdAsync<ResponseDto>(id);
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var response = await _blogService.GetAllBlogByIdAsync<ResponseDto>(id, accessToken);
             if (response != null && response.IsSuccess)
             {
                 var model = JsonConvert.DeserializeObject<BlogDto>(Convert.ToString(response.Result));
@@ -88,12 +96,14 @@ namespace ForuMe.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(BlogDto model)
         {
             if (ModelState.IsValid)
             {
-                var response = await _blogService.DeleteBlogAsync<ResponseDto>(model.Id);
+                var accessToken = await HttpContext.GetTokenAsync("access_token");
+                var response = await _blogService.DeleteBlogAsync<ResponseDto>(model.Id, accessToken);
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));

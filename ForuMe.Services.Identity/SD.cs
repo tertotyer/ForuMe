@@ -16,13 +16,18 @@ namespace ForuMe.Services.Identity
                 new IdentityResources.Profile(),
             };
 
-        public static IEnumerable<ApiScope> ApiScopes =>
-            new List<ApiScope> { 
+        public static IEnumerable<ApiScope> ApiScopes
+        {
+            get
+            {
+                return new List<ApiScope> {
                 new ApiScope("ForuMe", "ForuMe server"),
                 new ApiScope("read", "Read data"),
                 new ApiScope("write", "Write data"),
                 new ApiScope("delete", "Delete  data")
             };
+            }
+        }
 
         public static IEnumerable<Client> Clients =>
             new List<Client> {
