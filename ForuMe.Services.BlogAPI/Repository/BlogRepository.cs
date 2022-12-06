@@ -2,6 +2,7 @@
 using ForuMe.Services.BlogAPI.DbContexts;
 using ForuMe.Services.BlogAPI.Models;
 using ForuMe.Services.BlogAPI.Models.Dtos;
+using ForuMe.Services.BlogAPI.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace ForuMe.Services.BlogAPI.Repository
@@ -49,7 +50,6 @@ namespace ForuMe.Services.BlogAPI.Repository
             }
             catch (Exception)
             {
-                
                 return false;
             }
         }

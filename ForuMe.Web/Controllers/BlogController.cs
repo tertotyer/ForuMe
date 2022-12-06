@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
 
 namespace ForuMe.Web.Controllers
 {
@@ -32,6 +33,21 @@ namespace ForuMe.Web.Controllers
             return View(products);
         }
 
+        [Authorize]
+        public async Task<IActionResult> UserBlogs()
+        {
+            var products = new List<BlogDto>();
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var response = await _blogService.GetAllBlogsAsync<ResponseDto>(accessToken);
+
+            if (response != null && response.IsSuccess)
+            {
+                products = JsonConvert.DeserializeObject<List<BlogDto>>(Convert.ToString(response.Result));
+            }
+            return View("Index", products.Where(x => x.Author == User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value));
+        }
+
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -41,6 +57,8 @@ namespace ForuMe.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BlogDto model)
         {
+            model.Author = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+
             if (ModelState.IsValid)
             {
                 var accessToken = await HttpContext.GetTokenAsync("access_token");
@@ -54,6 +72,7 @@ namespace ForuMe.Web.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token");
@@ -83,6 +102,7 @@ namespace ForuMe.Web.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token");
@@ -96,7 +116,6 @@ namespace ForuMe.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(BlogDto model)
         {

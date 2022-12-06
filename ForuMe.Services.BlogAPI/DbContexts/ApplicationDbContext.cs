@@ -10,6 +10,15 @@ namespace ForuMe.Services.BlogAPI.DbContexts
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Blog>()
+                .HasOne<Category>(x => x.Category)
+                .WithMany(x => x.Blogs)
+                .HasForeignKey(x => x.CategoryId);
+        }
+
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Blog> Blogs { get; set; }
     }
 }

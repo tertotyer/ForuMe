@@ -1,19 +1,20 @@
 ﻿using ForuMe.Services.BlogAPI.Models.Dtos;
+using ForuMe.Services.BlogAPI.Repository;
 using ForuMe.Services.BlogAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForuMe.Services.BlogAPI.Controllers
 {
-    [Route("api/blogs")]
-    public class BlogAPIController : ControllerBase
+    [Route("api/categories")]
+    public class CategoryAPIController : ControllerBase
     {
         protected ResponseDto _response;
-        private IBlogRepository _blogRepository;
+        private ICategoryRepository _categoryRepository;
 
-        public BlogAPIController(IBlogRepository blogRepository)
+        public CategoryAPIController(ICategoryRepository catetegoryRepository)
         {
-            _blogRepository = blogRepository;
+            _categoryRepository = catetegoryRepository;
             this._response = new ResponseDto();
         }
 
@@ -22,8 +23,8 @@ namespace ForuMe.Services.BlogAPI.Controllers
         {
             try
             {
-                var blogDtos = await _blogRepository.GetBlogs();
-                _response.Result = blogDtos;
+                var categoryDtos = await _categoryRepository.GetCategories();
+                _response.Result = categoryDtos;
             }
             catch (Exception ex)
             {
@@ -39,7 +40,7 @@ namespace ForuMe.Services.BlogAPI.Controllers
         {
             try
             {
-                var blogDtos = await _blogRepository.GetBlogById(id);
+                var blogDtos = await _categoryRepository.GetCategoryById(id);
                 _response.Result = blogDtos;
             }
             catch (Exception ex)
@@ -51,11 +52,11 @@ namespace ForuMe.Services.BlogAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ResponseDto> Post([FromBody] BlogDto blogDto)
-        {   
+        public async Task<ResponseDto> Post([FromBody] CategoryDto categoryDto)
+        {
             try
             {
-                var model = await _blogRepository.CreateUpdateBlog(blogDto);
+                var model = await _categoryRepository.CreateUpdateCategory(categoryDto);
                 _response.Result = model;
             }
             catch (Exception ex)
@@ -67,15 +68,15 @@ namespace ForuMe.Services.BlogAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ResponseDto> Put([FromBody] BlogDto blogDto)
+        public async Task<ResponseDto> Put([FromBody] CategoryDto categoryDto)
         {
             try
             {
-                var model = await _blogRepository.CreateUpdateBlog(blogDto);
+                var model = await _categoryRepository.CreateUpdateCategory(categoryDto);
                 _response.Result = model;
             }
             catch (Exception ex)
-            {   
+            {
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
@@ -88,7 +89,7 @@ namespace ForuMe.Services.BlogAPI.Controllers
         {
             try
             {
-                var isSuccess = await _blogRepository.DeleteBlog(id);
+                var isSuccess = await _categoryRepository.DeleteCategory(id);
                 _response.Result = isSuccess;
             }
             catch (Exception ex)
