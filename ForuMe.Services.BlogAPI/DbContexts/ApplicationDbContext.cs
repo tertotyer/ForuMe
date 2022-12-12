@@ -16,9 +16,15 @@ namespace ForuMe.Services.BlogAPI.DbContexts
                 .HasOne<Category>(x => x.Category)
                 .WithMany(x => x.Blogs)
                 .HasForeignKey(x => x.CategoryId);
+
+            modelBuilder.Entity<Article>()
+                .HasOne<Blog>(x => x.Blog)
+                .WithMany(x => x.Articles)
+                .HasForeignKey(x => x.BlogId);
         }
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Article> Articles { get; set; }
     }
 }

@@ -5,9 +5,18 @@ using ForuMe.Web.Services.IServices;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddHttpClient<IBlogService, BlogService>();
 SD.BlogAPIBase = builder.Configuration["ServiceUrls:BlogApi"];
+SD.IdentityAPIBase = builder.Configuration["ServiceUrls:IdentityApi"];
+
+builder.Services.AddHttpClient<IBlogService, BlogService>();
+builder.Services.AddHttpClient<ICategoryService, CategoryService>();
+builder.Services.AddHttpClient<IArticleService, ArticleService>();
+builder.Services.AddHttpClient<IUserService, UserService>();
+
 builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddHttpClient<IArticleService, ArticleService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllersWithViews();
 

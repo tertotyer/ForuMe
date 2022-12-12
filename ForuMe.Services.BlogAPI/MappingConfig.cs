@@ -15,6 +15,9 @@ namespace ForuMe.Services.BlogAPI
 
                 config.CreateMap<CategoryDto, Category>();
                 config.CreateMap<Category, CategoryDto>();
+
+                config.CreateMap<ArticleDto, Article>();
+                config.CreateMap<Article, ArticleDto>();
             });
 
             return mappingConfig;

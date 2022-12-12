@@ -16,7 +16,7 @@ namespace ForuMe.Web.Controllers
         }
 
         public IActionResult Index()
-        {
+        {   
             return View();
         }
 

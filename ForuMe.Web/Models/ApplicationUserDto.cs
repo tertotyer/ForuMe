@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ForuMe.Services.Identity.Models
+namespace ForuMe.Web.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUserDto : IdentityUser
     {
         public double Level { get; set; }
     }

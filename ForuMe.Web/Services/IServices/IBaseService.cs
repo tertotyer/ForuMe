@@ -6,6 +6,5 @@ namespace ForuMe.Web.Services.IServices
     {
         ResponseDto responseModel { get; set; }
         Task<T> SendAsync<T>(ApiRequest apiRequest);
-
     }
 }

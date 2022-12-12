@@ -4,47 +4,30 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Data;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 
 namespace ForuMe.Web.Controllers
 {
-    public class BlogController : Controller
+    public class CategoriesController : Controller
     {
-        private readonly IBlogService _blogService;
+        private readonly ICategoryService _categoryService;
 
-        public BlogController(IBlogService blogService)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _blogService = blogService;
+            _categoryService = categoryService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var products = new List<BlogDto>();
+            var categories = new List<CategoryDto>();
             var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _blogService.GetAllBlogsAsync<ResponseDto>(accessToken);
+            var response = await _categoryService.GetAllCategoriesAsync<ResponseDto>(accessToken);
 
             if (response != null && response.IsSuccess)
             {
-                products = JsonConvert.DeserializeObject<List<BlogDto>>(Convert.ToString(response.Result));
+                categories = JsonConvert.DeserializeObject<List<CategoryDto>>(Convert.ToString(response.Result));
             }
-            return View(products);
-        }
-
-        [Authorize]
-        public async Task<IActionResult> UserBlogs()
-        {
-            var products = new List<BlogDto>();
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _blogService.GetAllBlogsAsync<ResponseDto>(accessToken);
-
-            if (response != null && response.IsSuccess)
-            {
-                products = JsonConvert.DeserializeObject<List<BlogDto>>(Convert.ToString(response.Result));
-            }
-            return View("Index", products.Where(x => x.Author == User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value));
+            return View(categories);
         }
 
         [Authorize]
@@ -55,14 +38,12 @@ namespace ForuMe.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BlogDto model)
+        public async Task<IActionResult> Create(CategoryDto model)
         {
-            model.Author = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
-
             if (ModelState.IsValid)
             {
                 var accessToken = await HttpContext.GetTokenAsync("access_token");
-                var response = await _blogService.CreateBlogAsync<ResponseDto>(model, accessToken);
+                var response = await _categoryService.CreateCategoryAsync<ResponseDto>(model, accessToken);
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));
@@ -76,23 +57,23 @@ namespace ForuMe.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _blogService.GetAllBlogByIdAsync<ResponseDto>(id, accessToken);
+            var response = await _categoryService.GetCategoryByIdAsync<ResponseDto>(id, accessToken);
             if (response != null && response.IsSuccess)
             {
                 var model = JsonConvert.DeserializeObject<BlogDto>(Convert.ToString(response.Result));
                 return View(model);
             }
-            return NotFound();  
+            return NotFound();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(BlogDto model)
+        public async Task<IActionResult> Edit(CategoryDto model)
         {
             if (ModelState.IsValid)
             {
                 var accessToken = await HttpContext.GetTokenAsync("access_token");
-                var response = await _blogService.UpdateBlogAsync<ResponseDto>(model, accessToken);
+                var response = await _categoryService.UpdateCategoryAsync<ResponseDto>(model, accessToken);
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));
@@ -106,7 +87,7 @@ namespace ForuMe.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _blogService.GetAllBlogByIdAsync<ResponseDto>(id, accessToken);
+            var response = await _categoryService.GetCategoryByIdAsync<ResponseDto>(id, accessToken);
             if (response != null && response.IsSuccess)
             {
                 var model = JsonConvert.DeserializeObject<BlogDto>(Convert.ToString(response.Result));
@@ -117,12 +98,12 @@ namespace ForuMe.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(BlogDto model)
+        public async Task<IActionResult> Delete(CategoryDto model)
         {
             if (ModelState.IsValid)
             {
                 var accessToken = await HttpContext.GetTokenAsync("access_token");
-                var response = await _blogService.DeleteBlogAsync<ResponseDto>(model.Id, accessToken);
+                var response = await _categoryService.DeleteCategoryAsync<ResponseDto>(model.Id, accessToken);
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));

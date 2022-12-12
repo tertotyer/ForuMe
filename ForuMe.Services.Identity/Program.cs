@@ -30,6 +30,7 @@ var identityBuilder = builder.Services.AddIdentityServer(options =>
 .AddInMemoryClients(SD.Clients)
 .AddAspNetIdentity<ApplicationUser>();
 
+
 builder.Services.AddScoped<IProfileService, ProfileService>();
 
 identityBuilder.AddDeveloperSigningCredential();

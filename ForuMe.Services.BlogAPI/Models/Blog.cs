@@ -10,13 +10,14 @@ namespace ForuMe.Services.BlogAPI.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
-        [Column(TypeName = "text")]
-        public string Text { get; set; }
+        
         [Required]
         public string Author { get; set; }
 
+
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
+
+        public IEnumerable<Article> Articles { get; set; }
     }
 }
