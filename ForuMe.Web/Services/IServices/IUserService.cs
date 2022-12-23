@@ -5,6 +5,7 @@ namespace ForuMe.Web.Services.IServices
 {
     public interface IUserService : IBaseService
     {
-        Task<T> UpdateUserLevel<T>(double experience);
+        Task<T> UpdateUserLevelAsync<T>(dynamic data);
+        Task<T> GetUserByIdAsync<T>(string id);
     }
 }

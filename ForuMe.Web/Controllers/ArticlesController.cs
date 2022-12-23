@@ -64,7 +64,11 @@ namespace ForuMe.Web.Controllers
                 var response = await _articleService.CreateArticleAsync<ResponseDto>(model, accessToken);
                 if (response != null && response.IsSuccess)
                 {
-                    await _userService.UpdateUserLevel<ResponseDto>(0.1);
+                    await _userService.UpdateUserLevelAsync<ResponseDto>(new
+                    {
+                        Id = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value,
+                        Exp = 0.1
+                    });
                     return RedirectToAction(nameof(Index));
                 }
             }

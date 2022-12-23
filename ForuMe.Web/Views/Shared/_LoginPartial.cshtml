@@ -1,6 +1,26 @@
-﻿<ul class="navbar-nav">
+﻿@using ForuMe.Web.Services
+@using System.Security.Claims;
+@using Newtonsoft.Json;
+@inject UserService userService
+
+
+
+<ul class="navbar-nav">
     @if (User.Identity.IsAuthenticated)
     {
+        string userId = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+        var response = await userService.GetUserByIdAsync<ResponseDto>(userId);
+        double level = 0;
+
+        if (response != null && response.IsSuccess)
+        {
+            dynamic model = JsonConvert.DeserializeObject(Convert.ToString(response.Result));
+            level = (double)model["level"];
+        }
+
+        <li class="nav-item">
+            <a class="nav-link">Level: @level</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" href="#">Hello @User.Identity.Name </a>
         </li>

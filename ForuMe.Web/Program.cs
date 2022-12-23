@@ -15,11 +15,12 @@ builder.Services.AddHttpClient<IUserService, UserService>();
 
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddHttpClient<IArticleService, ArticleService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<UserService>();
 
+builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";

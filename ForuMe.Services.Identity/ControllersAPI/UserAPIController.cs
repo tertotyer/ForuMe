@@ -1,8 +1,12 @@
 ﻿using Duende.IdentityServer.Extensions;
+using ForuMe.Services.Identity.DbContexts;
 using ForuMe.Services.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace ForuMe.Services.Identity.ControllersAPI
@@ -20,11 +24,13 @@ namespace ForuMe.Services.Identity.ControllersAPI
         }
 
         [HttpGet]
-        public ResponseDto Get()
+        [Route("{id}")]
+        public async Task<ResponseDto> Get(string id)
         {
             try
             {
-                _response.Result = HttpContext.User.Identity.Name;
+                var user = await _userManager.FindByIdAsync(id);
+                _response.Result = user;
             }
             catch (Exception ex)
             {
@@ -35,12 +41,15 @@ namespace ForuMe.Services.Identity.ControllersAPI
         }
 
         [HttpPut]
-        public async  Task<ResponseDto> Put([FromBody] double experience)
+        public async  Task<ResponseDto> Put([FromBody] dynamic model)
         {
             try
             {
-                var user = _userManager.Users.Where(x => x.Id == "770d722f-0c66-45a4-92fa-a1cdba03c737").FirstOrDefault();
-                user.Level += experience;
+                var data = JsonConvert.DeserializeObject(Convert.ToString(model));
+
+                var userId = (string)data["Id"];
+                var user = _userManager.Users.Where(x => x.Id == userId).FirstOrDefault();
+                user.Level += (double)data["Exp"];
 
                 var result = await _userManager.UpdateAsync(user);
                 _response.Result = result;

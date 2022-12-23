@@ -74,6 +74,11 @@ namespace ForuMe.Web.Controllers
 
             if (response != null && response.IsSuccess)
             {
+                await _userService.UpdateUserLevelAsync<ResponseDto>(new
+                {
+                    Id = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value,
+                    Exp = 0.2
+                });
                 categories = JsonConvert.DeserializeObject<List<CategoryDto>>(Convert.ToString(response.Result));
             }
 
@@ -93,7 +98,7 @@ namespace ForuMe.Web.Controllers
                 var response = await _blogService.CreateBlogAsync<ResponseDto>(model, accessToken);
                 if (response != null && response.IsSuccess)
                 {
-                    await _userService.UpdateUserLevel<ResponseDto>(0.1);
+                    
                     return RedirectToAction(nameof(Index));
                 }
             }

@@ -39,8 +39,8 @@ namespace ForuMe.Services.BlogAPI.Controllers
         {
             try
             {
-                var blogDtos = await _blogRepository.GetBlogById(id);
-                _response.Result = blogDtos;
+                var blogDto = await _blogRepository.GetBlogById(id);
+                _response.Result = blogDto;
             }
             catch (Exception ex)
             {
